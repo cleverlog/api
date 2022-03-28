@@ -1,17 +1,21 @@
 syntax = "proto3";
 
-option go_package = "github.com/pycnick/smartlog/api/proto/;proto";
+option go_package = "github.com/pycnick/cleverlog/api/proto/;proto";
+
+import "google/protobuf/timestamp.proto";
 
 message Log {
   string service = 1;
   string span_id = 2;
-  string json = 3;
+  google.protobuf.Timestamp timestamp = 3;
+  string source = 4;
+  string message = 5;
 }
 
 message LogStatus {
   bool success = 1;
 }
 
-service SmartLogV1 {
+service LogService {
   rpc SendLog(Log) returns (LogStatus);
 }

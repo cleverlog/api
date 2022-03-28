@@ -12,7 +12,7 @@ import (
 
 	"github.com/google/wire"
 
-	wireTools "github.com/smartlog/api/tools/wire"
+	wireTools "github.com/cleverlog/api/tools/wire"
 )
 
 var ApiSet = wire.NewSet(wireTools.NewClickHouse, NewApiService)

@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  clickHouse:
+    image: yandex/clickhouse-server
+    environment:
+      CLICKHOUSE_DB: cleverlog
+      CLICKHOUSE_USER: cleveruser
+      CLICKHOUSE_PASSWORD: cleverpswd
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+      - "9009:9009"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: vertamedia-clickhouse-datasource
+    ports:
+      - "3000:3000"
+
+volumes:
+  clickhouse-data:
+  grafana_data:

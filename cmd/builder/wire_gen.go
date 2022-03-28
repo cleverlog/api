@@ -8,8 +8,8 @@ package builder
 
 import (
 	"database/sql"
+	"github.com/cleverlog/api/tools/wire"
 	wire2 "github.com/google/wire"
-	"github.com/smartlog/api/tools/wire"
 )
 
 // Injectors from api.go:

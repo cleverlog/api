@@ -1,7 +1,7 @@
 package wire
 
 import (
-	"crypto/tls"
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -9,6 +9,8 @@ import (
 	"github.com/ClickHouse/clickhouse-go/v2"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+
+	"github.com/cleverlog/api/cmd/migrations"
 )
 
 func NewClickHouse() (*sql.DB, func(), error) {
@@ -29,9 +31,6 @@ func NewClickHouse() (*sql.DB, func(), error) {
 			Username: user,
 			Password: pswd,
 		},
-		TLS: &tls.Config{
-			InsecureSkipVerify: true,
-		},
 		Settings: clickhouse.Settings{
 			"max_execution_time": 60,
 		},
@@ -46,12 +45,29 @@ func NewClickHouse() (*sql.DB, func(), error) {
 	conn.SetMaxOpenConns(10)
 	conn.SetConnMaxLifetime(time.Hour)
 
+	ctx := clickhouse.Context(context.Background(), clickhouse.WithSettings(clickhouse.Settings{
+		"max_block_size": 10,
+	}), clickhouse.WithProgress(func(p *clickhouse.Progress) {
+		fmt.Println("progress: ", p)
+	}))
+	if err := conn.PingContext(ctx); err != nil {
+		if exception, ok := err.(*clickhouse.Exception); ok {
+			fmt.Printf("Catch exception [%d] %s \n%s\n", exception.Code, exception.Message, exception.StackTrace)
+		}
+		return nil, nil, err
+	}
+
 	cleanup := func() {
 		if errClose := conn.Close(); errClose != nil {
 			log.Error(errClose)
 		}
 
 		log.Info("ClickHouse cleanup")
+	}
+
+	if err := migrations.Migrate(conn); err != nil {
+		cleanup()
+		panic(err)
 	}
 
 	return conn, cleanup, nil

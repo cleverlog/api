@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="go build github.com/cleverlog/api/cmd/server" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
+    <module name="api" />
+    <working_directory value="$PROJECT_DIR$" />
+    <envs>
+      <env name="CLICKHOUSE_HOST" value="localhost" />
+      <env name="CLICKHOUSE_PORT" value="9000" />
+      <env name="CLICKHOUSE_USER" value="cleveruser" />
+      <env name="CLICKHOUSE_PSWD" value="cleverpswd" />
+      <env name="CLICKHOUSE_DB" value="cleverlog" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="github.com/cleverlog/api/cmd/server" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/cmd/server/server.go" />
+    <method v="2" />
+  </configuration>
+</component>
