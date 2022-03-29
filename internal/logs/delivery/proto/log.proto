@@ -4,6 +4,10 @@ option go_package = "github.com/pycnick/cleverlog/api/proto/;proto";
 
 import "google/protobuf/timestamp.proto";
 
+message Logs {
+  repeated Log logs = 1;
+}
+
 message Log {
   string service = 1;
   string span_id = 2;
@@ -18,4 +22,5 @@ message LogStatus {
 
 service LogService {
   rpc SendLog(Log) returns (LogStatus);
+  rpc SendLogs(Logs) returns (LogStatus);
 }

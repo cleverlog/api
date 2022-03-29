@@ -34,3 +34,23 @@ func (d *SourcesDelivery) SendLog(ctx context.Context, log *proto.Log) (*proto.L
 
 	return &proto.LogStatus{Success: true}, nil
 }
+
+func (d *SourcesDelivery) SendLogs(ctx context.Context, logs *proto.Logs) (*proto.LogStatus, error) {
+	var newLogs []*domain.Log
+
+	for _, log := range logs.Logs {
+		newLogs = append(newLogs, &domain.Log{
+			ServiceName: log.Service,
+			SpanID:      tools.StringToUUID(log.SpanId),
+			Timestamp:   log.Timestamp.AsTime(),
+			Source:      log.Source,
+			Message:     log.Message,
+		})
+	}
+
+	if err := d.logsUseCase.SendLog(ctx, newLogs...); err != nil {
+		return nil, err
+	}
+
+	return &proto.LogStatus{Success: true}, nil
+}

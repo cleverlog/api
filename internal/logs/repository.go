@@ -7,5 +7,5 @@ import (
 )
 
 type Repository interface {
-	SendLog(ctx context.Context, log *domain.Log) error
+	SendLog(ctx context.Context, log ...*domain.Log) error
 }

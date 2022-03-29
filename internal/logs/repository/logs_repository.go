@@ -21,16 +21,24 @@ func New(clickConn *sql.DB) *LogsRepository {
 	}
 }
 
-func (r *LogsRepository) Create(ctx context.Context, log *domain.Log) error {
-	sqlQuery, args, err := r.sqlGen.Insert("logs").
-		SetMap(map[string]interface{}{
-			"service_name": log.ServiceName,
-			"span_id":      log.SpanID,
-			"tstamp":       log.Timestamp,
-			"src":          log.Source,
-			"message":      log.Message,
-		}).
-		ToSql()
+func (r *LogsRepository) Create(ctx context.Context, logs ...*domain.Log) error {
+	builder := r.sqlGen.Insert("logs").
+		Columns("service_name",
+			"span_id",
+			"tstamp",
+			"src",
+			"message")
+
+	for _, log := range logs {
+		builder.Values(
+			log.ServiceName,
+			log.SpanID,
+			log.Timestamp,
+			log.Source,
+			log.Message)
+	}
+
+	sqlQuery, args, err := builder.ToSql()
 	if err != nil {
 		return err
 	}
