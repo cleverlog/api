@@ -3,6 +3,7 @@
 CREATE TABLE IF NOT EXISTS logs
 (
     service_name String,
+    log_level    String,
     span_id      UUID,
     tstamp       DateTime,
     src          String,

@@ -23,15 +23,18 @@ func New(clickConn *sql.DB) *LogsRepository {
 
 func (r *LogsRepository) Create(ctx context.Context, logs ...*domain.Log) error {
 	builder := r.sqlGen.Insert("logs").
-		Columns("service_name",
+		Columns(
+			"service_name",
+			"log_level",
 			"span_id",
 			"tstamp",
 			"src",
 			"message")
 
 	for _, log := range logs {
-		builder.Values(
+		builder = builder.Values(
 			log.ServiceName,
+			log.Level,
 			log.SpanID,
 			log.Timestamp,
 			log.Source,

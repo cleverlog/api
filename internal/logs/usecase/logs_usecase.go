@@ -18,5 +18,5 @@ func New(repo logs.Repository) *LogsUseCase {
 }
 
 func (r *LogsUseCase) Create(ctx context.Context, logs ...*domain.Log) error {
-	return r.logsRepository.SendLog(ctx, logs...)
+	return r.logsRepository.Create(ctx, logs...)
 }

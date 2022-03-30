@@ -14,6 +14,12 @@ message Log {
   google.protobuf.Timestamp timestamp = 3;
   string source = 4;
   string message = 5;
+  enum LogLevel {
+    Error = 0;
+    Info = 1;
+    Debug = 2;
+  }
+  LogLevel level = 6;
 }
 
 message LogStatus {

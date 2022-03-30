@@ -17,13 +17,16 @@ type SourcesDelivery struct {
 	logsUseCase logs.UseCase
 }
 
-func New() *SourcesDelivery {
-	return &SourcesDelivery{}
+func New(logUC logs.UseCase) *SourcesDelivery {
+	return &SourcesDelivery{
+		logsUseCase: logUC,
+	}
 }
 
 func (d *SourcesDelivery) SendLog(ctx context.Context, log *proto.Log) (*proto.LogStatus, error) {
-	if err := d.logsUseCase.SendLog(ctx, &domain.Log{
+	if err := d.logsUseCase.Create(ctx, &domain.Log{
 		ServiceName: log.Service,
+		Level:       log.Level.String(),
 		SpanID:      tools.StringToUUID(log.SpanId),
 		Timestamp:   log.Timestamp.AsTime(),
 		Source:      log.Source,
@@ -41,6 +44,7 @@ func (d *SourcesDelivery) SendLogs(ctx context.Context, logs *proto.Logs) (*prot
 	for _, log := range logs.Logs {
 		newLogs = append(newLogs, &domain.Log{
 			ServiceName: log.Service,
+			Level:       log.Level.String(),
 			SpanID:      tools.StringToUUID(log.SpanId),
 			Timestamp:   log.Timestamp.AsTime(),
 			Source:      log.Source,
@@ -48,7 +52,7 @@ func (d *SourcesDelivery) SendLogs(ctx context.Context, logs *proto.Logs) (*prot
 		})
 	}
 
-	if err := d.logsUseCase.SendLog(ctx, newLogs...); err != nil {
+	if err := d.logsUseCase.Create(ctx, newLogs...); err != nil {
 		return nil, err
 	}
 

@@ -8,6 +8,7 @@ import (
 
 type Log struct {
 	ServiceName string
+	Level       string
 	SpanID      uuid.UUID
 	Timestamp   time.Time
 	Source      string
