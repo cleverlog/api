@@ -1,4 +1,7 @@
-all: run_clickhouse
+all: run
 
-run_clickhouse:
-	docker-compose -f ops/docker-compose.yml up
+run:
+	docker-compose -f ops/docker-compose.yml up -d
+
+stop:
+	docker-compose -f ops/docker-compose.yml down
